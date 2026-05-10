@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Nomona Cookies</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .auth-decoration { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .deco-circle { position: absolute; border-radius: 50%; background: var(--secondary); opacity: 0.5; }
+    .deco-circle:nth-child(1) { width: 350px; height: 350px; top: -120px; left: -80px; }
+    .deco-circle:nth-child(2) { width: 280px; height: 280px; bottom: -60px; right: -40px; background: #ffd1d8; }
+  </style>
+</head>
+<body>
+  <div class="auth-decoration"><div class="deco-circle"></div><div class="deco-circle"></div></div>
+  <div class="auth-wrapper" style="position:relative;z-index:1;">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div style="width:60px;height:60px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1rem;">🍪</div>
+        <h1>Nomona Cookies</h1>
+        <p>Premium Bakery Store</p>
+      </div>
+      <h2 class="auth-title">Buat Akun Baru</h2>
+      <p class="auth-sub">Bergabung dan nikmati cookies premium kami</p>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input type="text" id="username" class="form-input" placeholder="Buat username unik" required minlength="3">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input type="email" id="email" class="form-input" placeholder="alamat@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="password" class="form-input" placeholder="Minimal 6 karakter" required minlength="6" style="padding-right:3rem;">
+            <button type="button" onclick="togglePassword('password', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1rem;cursor:pointer;">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Konfirmasi Password</label>
+          <div style="position:relative;">
+            <input type="password" id="confirmPassword" class="form-input" placeholder="Ulangi password" required style="padding-right:3rem;">
+            <button type="button" onclick="togglePassword('confirmPassword', this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1rem;cursor:pointer;">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;">Daftar Sekarang</button>
+      </form>
+
+      <div class="auth-footer">
+        Sudah punya akun? <a href="login.html">Masuk di sini</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

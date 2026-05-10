@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container" style="padding:2rem;">
+
+  <div class="card" id="profileBox">
+    Loading...
+  </div>
+
+  <div class="card" style="margin-top:2rem;">
+    <h2>📦 Riwayat Pesanan</h2>
+    <div id="orders"></div>
+  </div>
+
+</div>
+
+<script>
+fetch('/me')
+.then(r=>r.json())
+.then(data=>{
+
+  if(!data.loggedIn){
+    location.href='login.html'
+  }
+
+  document.getElementById('profileBox').innerHTML = `
+    <h1>👤 ${data.user.username}</h1>
+    <p>${data.user.email}</p>
+    <button onclick="logout()" class="btn btn-primary">Logout</button>
+  `
+})
+
+fetch('/my-orders')
+.then(r=>r.json())
+.then(data=>{
+
+  document.getElementById('orders').innerHTML = data.map(o=>`
+
+    <div class="product-card" style="margin-top:1rem;">
+      <h3>Order #${o.id}</h3>
+      <p>Total: Rp ${o.total.toLocaleString()}</p>
+      <p>Status: ${o.status}</p>
+    </div>
+
+  `).join('')
+})
+
+function logout(){
+  fetch('/logout',{method:'POST'})
+  .then(()=>location.href='index.html')
+}
+</script>
+</html>

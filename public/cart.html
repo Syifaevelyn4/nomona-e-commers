@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keranjang — Nomona Cookies</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2.5rem; max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .cart-item { background: white; border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow-card); display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem; transition: var(--transition); }
+    .cart-item:hover { box-shadow: var(--shadow); }
+    .cart-item-img { width: 80px; height: 80px; border-radius: var(--radius-sm); object-fit: cover; flex-shrink: 0; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-family: var(--font-display); font-size: 1rem; color: var(--text); margin-bottom: 0.25rem; }
+    .cart-item-price { color: var(--primary); font-weight: 700; font-size: 0.95rem; margin-bottom: 0.75rem; }
+    .cart-item-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+    .cart-item-total { font-weight: 700; color: var(--text); }
+    .cart-delete-btn { background: #fee2e2; color: #ef4444; border: none; border-radius: var(--radius-xs); width: 34px; height: 34px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: var(--transition); cursor: pointer; flex-shrink: 0; }
+    .cart-delete-btn:hover { background: #ef4444; color: white; }
+    .summary-card { background: white; border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow-card); position: sticky; top: 90px; }
+    .summary-title { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 1.5rem; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .summary-total { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--primary); border-top: 2px solid var(--border); padding-top: 1rem; margin-top: 1rem; }
+    @media (max-width: 768px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .summary-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand"><div class="nav-logo-icon">🍪</div>Nomona <span class="dot">·</span> Cookies</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="shop.html">Toko</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
+      <div id="navLoginBtn"><a href="login.html" class="btn-nav">Masuk</a></div>
+      <div id="navUserMenu" style="display:none;align-items:center;gap:0.75rem;">
+        <a href="profile.html" style="font-size:0.875rem;font-weight:600;color:var(--primary)" id="navUsername">User</a>
+        <button onclick="logout()" class="btn-nav" style="background:var(--secondary);color:var(--primary);">Keluar</button>
+      </div>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu">
+    <ul>
+      <li><a href="index.html">🏠 Beranda</a></li>
+      <li><a href="shop.html">🛍️ Toko</a></li>
+      <li><a href="profile.html">👤 Profil</a></li>
+    </ul>
+  </div>
+
+  <div class="page-hero">
+    <div style="font-size:2rem;margin-bottom:0.5rem;">🛒</div>
+    <h1>Keranjang Belanja</h1>
+    <p>Review item sebelum checkout</p>
+  </div>
+
+  <div class="cart-layout">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.2rem;" id="cartItemCount">Item Keranjang</h2>
+        <button onclick="confirmClearCart()" class="btn btn-sm" style="background:#fee2e2;color:#ef4444;">🗑️ Kosongkan</button>
+      </div>
+      <div id="cartList"></div>
+    </div>
+
+    <!-- Summary -->
+    <div>
+      <div class="summary-card">
+        <h3 class="summary-title">Ringkasan Pesanan</h3>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal">Rp 0</span></div>
+        <div class="summary-row"><span>Ongkir</span><span style="color:#22c55e;">Gratis</span></div>
+        <div class="summary-row"><span>Diskon</span><span>—</span></div>
+        <div class="summary-total"><span>Total</span><span id="totalPrice">Rp 0</span></div>
+        <a href="checkout.html" id="checkoutBtn" class="btn btn-primary" style="width:100%;margin-top:1.5rem;justify-content:center;">Checkout Sekarang →</a>
+        <a href="shop.html" class="btn btn-ghost" style="width:100%;margin-top:0.75rem;justify-content:center;">← Lanjut Belanja</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom"><p>© 2024 Nomona Cookies. Made with 🍪 & ❤️</p></div>
+  </footer>
+
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function renderCart() {
+      const cart = getCart();
+      const listEl = document.getElementById('cartList');
+      const subtotalEl = document.getElementById('subtotal');
+      const totalEl = document.getElementById('totalPrice');
+      const countEl = document.getElementById('cartItemCount');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+
+      if (cart.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🛒</div>
+            <h3>Keranjang Kosong</h3>
+            <p>Belum ada produk di keranjangmu</p>
+            <a href="shop.html" class="btn btn-primary">🛍️ Mulai Belanja</a>
+          </div>`;
+        subtotalEl.textContent = 'Rp 0';
+        totalEl.textContent = 'Rp 0';
+        countEl.textContent = '0 Item';
+        if (checkoutBtn) checkoutBtn.style.pointerEvents = 'none', checkoutBtn.style.opacity = '0.5';
+        return;
+      }
+
+      const total = getCartTotal();
+      countEl.textContent = `${cart.length} Item`;
+      subtotalEl.textContent = formatRupiah(total);
+      totalEl.textContent = formatRupiah(total);
+      if (checkoutBtn) checkoutBtn.style.pointerEvents = '', checkoutBtn.style.opacity = '';
+
+      listEl.innerHTML = cart.map(item => {
+        const imgSrc = `/images/${item.image || 'placeholder.svg'}`;
+        return `
+          <div class="cart-item">
+            <img src="${imgSrc}" alt="${item.name}" class="cart-item-img" onerror="this.src='/images/placeholder.svg'">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatRupiah(item.price)}</div>
+              <div class="cart-item-bottom">
+                <div class="qty-selector">
+                  <button class="qty-btn" onclick="changeItemQty(${item.id}, -1)">−</button>
+                  <input type="number" class="qty-input" value="${item.quantity}" min="1" readonly>
+                  <button class="qty-btn" onclick="changeItemQty(${item.id}, 1)">+</button>
+                </div>
+                <div class="cart-item-total">${formatRupiah(item.price * item.quantity)}</div>
+              </div>
+            </div>
+            <button class="cart-delete-btn" onclick="deleteItem(${item.id})" title="Hapus">🗑️</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function changeItemQty(id, delta) {
+      const cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      const newQty = item.quantity + delta;
+      if (newQty < 1) { deleteItem(id); return; }
+      updateCartQuantity(id, newQty);
+      renderCart();
+    }
+
+    function deleteItem(id) {
+      removeFromCart(id);
+      renderCart();
+      showToast('Item dihapus dari keranjang');
+    }
+
+    function confirmClearCart() {
+      if (getCart().length === 0) return;
+      if (confirm('Kosongkan semua keranjang?')) { clearCart(); renderCart(); showToast('Keranjang dikosongkan'); }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>

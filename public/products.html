@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+  <div id="products" style="margin-top:2rem;"></div>
+</div>
+
+<script>
+const form = document.getElementById('productForm');
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+
+  const fd = new FormData();
+  fd.append('name', name.value);
+  fd.append('price', price.value);
+  fd.append('description', description.value);
+  fd.append('category', category.value);
+  fd.append('stock', stock.value);
+  fd.append('image', image.files[0]);
+
+  await fetch('/add-product', {
+    method:'POST',
+    body:fd
+  });
+
+  alert('Produk berhasil ditambah');
+  location.reload();
+})
+
+fetch('/products')
+.then(r=>r.json())
+.then(data=>{
+
+  document.getElementById('products').innerHTML = data.map(p=>`
+
+    <div class="product-card" style="margin-top:2rem;">
+      <img src="images/${p.image}" width="200">
+      <h2>${p.name}</h2>
+      <p>Rp ${p.price.toLocaleString()}</p>
+      <p>${p.category}</p>
+
+      <button onclick="hapus(${p.id})" class="btn btn-danger">Hapus</button>
+    </div>
+
+  `).join('')
+})
+
+function hapus(id){
+  fetch('/delete-product/' + id,{method:'DELETE'})
+  .then(()=>location.reload())
+}
+</script>
+
+</body>
+</html>

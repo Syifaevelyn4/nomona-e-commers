@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders - Nomona Cookies</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container" style="padding:2rem;">
+  <h1>📦 Semua Orders</h1>
+
+  <div id="ordersList"></div>
+</div>
+
+<script>
+fetch('/orders')
+.then(res => res.json())
+.then(data => {
+
+  document.getElementById('ordersList').innerHTML = data.map(order => `
+
+    <div class="card" style="margin-top:2rem;">
+      <h2>${order.customer_name}</h2>
+      <p><b>Alamat:</b> ${order.address}</p>
+      <p><b>Whatsapp:</b> ${order.whatsapp}</p>
+      <p><b>Total:</b> Rp ${order.total.toLocaleString()}</p>
+      <p><b>Status:</b> ${order.status}</p>
+
+      <h3>Items:</h3>
+      ${order.items.map(i => `
+        <div>
+          ${i.product_name} (${i.quantity}x)
+        </div>
+      `).join('')}
+
+      <select onchange="updateStatus(${order.id}, this.value)" class="form-input" style="margin-top:1rem;">
+        <option value="pending">Pending</option>
+        <option value="diproses">Diproses</option>
+        <option value="selesai">Selesai</option>
+      </select>
+    </div>
+
+  `).join('');
+})
+
+function updateStatus(id, status){
+  fetch('/finish-order/' + id, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({status})
+  })
+  .then(r=>r.json())
+  .then(()=>location.reload())
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko — Nomona Cookies</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .shop-layout { display: grid; grid-template-columns: 260px 1fr; gap: 2.5rem; max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
+    .sidebar { position: sticky; top: 90px; align-self: start; }
+    .sidebar-card { background: white; border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-card); margin-bottom: 1.25rem; }
+    .sidebar-title { font-family: var(--font-display); font-size: 1rem; color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .filter-btn-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .filter-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--text); text-align: left; transition: var(--transition); cursor: pointer; }
+    .filter-btn:hover, .filter-btn.active { background: var(--secondary); border-color: var(--primary); color: var(--primary); }
+    .shop-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .shop-count { font-size: 0.875rem; color: var(--text-light); }
+    .search-bar { position: relative; max-width: 360px; flex: 1; }
+    .search-bar input { width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: white; font-size: 0.875rem; outline: none; transition: var(--transition); }
+    .search-bar input:focus { border-color: var(--primary); }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      .shop-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .filter-btn-group { flex-direction: row; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand"><div class="nav-logo-icon">🍪</div>Nomona <span class="dot">·</span> Cookies</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="shop.html" class="active">Toko</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-icon-btn">🛒<span class="cart-badge" style="display:none">0</span></a>
+      <div id="navLoginBtn"><a href="login.html" class="btn-nav">Masuk</a></div>
+      <div id="navUserMenu" style="display:none;align-items:center;gap:0.75rem;">
+        <a href="profile.html" style="font-size:0.875rem;font-weight:600;color:var(--primary)" id="navUsername">User</a>
+        <button onclick="logout()" class="btn-nav" style="background:var(--secondary);color:var(--primary);">Keluar</button>
+      </div>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu">
+    <ul>
+      <li><a href="index.html">🏠 Beranda</a></li>
+      <li><a href="shop.html">🛍️ Toko</a></li>
+      <li><a href="cart.html">🛒 Keranjang</a></li>
+      <li><a href="profile.html">👤 Profil</a></li>
+    </ul>
+  </div>
+
+  <div class="page-hero">
+    <div style="font-size:2rem;margin-bottom:0.5rem;">🛍️</div>
+    <h1>Semua Cookies Premium</h1>
+    <p>Pilih cookies favoritmu dari koleksi premium kami</p>
+  </div>
+
+  <div class="shop-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">🔍 Cari Produk</h3>
+        <div class="search-bar" style="max-width:100%;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Cari cookies..." oninput="filterProducts()">
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">📁 Kategori</h3>
+        <div class="filter-btn-group" id="categoryBtns">
+          <button class="filter-btn active" onclick="setCategory('all', this)">🍪 Semua</button>
+          <button class="filter-btn" onclick="setCategory('Classic', this)">🌿 Classic</button>
+          <button class="filter-btn" onclick="setCategory('Chocolate', this)">🍫 Chocolate</button>
+          <button class="filter-btn" onclick="setCategory('Cheese', this)">🧀 Cheese</button>
+          <button class="filter-btn" onclick="setCategory('Special', this)">✨ Special</button>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">💰 Urutkan Harga</h3>
+        <div class="filter-btn-group" id="sortBtns">
+          <button class="filter-btn active" onclick="setSort('', this)">📊 Default</button>
+          <button class="filter-btn" onclick="setSort('asc', this)">⬆️ Termurah</button>
+          <button class="filter-btn" onclick="setSort('desc', this)">⬇️ Termahal</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <div class="shop-top">
+        <p class="shop-count" id="productCount">Memuat produk...</p>
+        <div class="search-bar" style="display:none;" id="mobileSearch">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Cari cookies..." oninput="filterProducts()">
+        </div>
+      </div>
+      <div id="productsGrid" class="products-grid"></div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3 class="footer-brand-name">🍪 Nomona Cookies</h3>
+        <p class="footer-desc">Premium artisan cookies dibuat dengan cinta dan bahan pilihan terbaik.</p>
+      </div>
+      <div class="footer-col"><h4>Menu</h4><ul><li><a href="index.html">Beranda</a></li><li><a href="shop.html">Toko</a></li><li><a href="cart.html">Keranjang</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2024 Nomona Cookies. Made with 🍪 & ❤️ in Indonesia</p></div>
+  </footer>
+
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let allProducts = [];
+    let currentCategory = 'all';
+    let currentSort = '';
+
+    async function loadProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = createSkeleton(6);
+      try {
+        const params = new URLSearchParams();
+        if (currentCategory !== 'all') params.set('category', currentCategory);
+        if (currentSort) params.set('sort', currentSort);
+        const search = document.getElementById('searchInput').value.trim();
+        if (search) params.set('search', search);
+
+        const res = await fetch('/products?' + params);
+        allProducts = await res.json();
+        renderProducts();
+      } catch (e) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">😕</div><h3>Gagal memuat produk</h3><p>Periksa koneksi dan coba lagi</p></div>`;
+      }
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const countEl = document.getElementById('productCount');
+      if (allProducts.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🔍</div><h3>Produk tidak ditemukan</h3><p>Coba kata kunci atau filter lain</p></div>`;
+        countEl.textContent = '0 produk ditemukan';
+        return;
+      }
+      countEl.textContent = `${allProducts.length} produk ditemukan`;
+      grid.innerHTML = allProducts.map(renderProductCard).join('');
+    }
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('#categoryBtns .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadProducts();
+    }
+
+    function setSort(sort, btn) {
+      currentSort = sort;
+      document.querySelectorAll('#sortBtns .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadProducts();
+    }
+
+    function filterProducts() { loadProducts(); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check URL params
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      if (cat) {
+        currentCategory = cat;
+        document.querySelectorAll('#categoryBtns .filter-btn').forEach(btn => {
+          if (btn.textContent.includes(cat)) { btn.classList.add('active'); }
+          else { btn.classList.remove('active'); }
+        });
+      }
+      loadProducts();
+    });
+  </script>
+</body>
+</html>

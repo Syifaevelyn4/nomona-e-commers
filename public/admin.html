@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <h1>👑 Admin Login</h1>
+
+    <form id="adminLogin">
+      <input type="text" id="username" placeholder="Username" class="form-input" required>
+      <br><br>
+
+      <input type="password" id="password" placeholder="Password" class="form-input" required>
+      <br><br>
+
+      <button class="btn btn-primary" style="width:100%;">
+        Login Admin
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+document.getElementById('adminLogin').addEventListener('submit', async(e)=>{
+  e.preventDefault();
+
+  const res = await fetch('/admin/login',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      username:username.value,
+      password:password.value
+    })
+  })
+
+  const data = await res.json();
+
+  if(data.success){
+    location.href='dashboard.html'
+  }else{
+    alert(data.error)
+  }
+})
+</script>
+
+</body>
+</html>
