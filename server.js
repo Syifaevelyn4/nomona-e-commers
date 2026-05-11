@@ -275,9 +275,8 @@ app.get('/admin/stats', requireAdmin, (req, res) => {
 });
 
 // ─── Start Server ──────────────────────────────────────────────────────────────
-//
-// 🍪 Nomona Cookies Server Export
-// for Vercel Deployment
-//
+const PORT = process.env.PORT || 3000;
 
-module.exports = app;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🍪 Nomona Cookies Server running on port ${PORT}`);
+});
