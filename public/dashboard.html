@@ -3,55 +3,411 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Admin - Nomona Cookies</title>
+
+  <title>Dashboard Admin • Nomona Cookies</title>
+
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body{
+      background:#fff5f7;
+      min-height:100vh;
+    }
+
+    .dashboard-wrapper{
+      padding:2rem;
+      max-width:1400px;
+      margin:auto;
+    }
+
+    .dashboard-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:1rem;
+      margin-bottom:2rem;
+    }
+
+    .dashboard-title h1{
+      font-size:2.3rem;
+      margin-bottom:.4rem;
+      color:var(--text);
+    }
+
+    .dashboard-title p{
+      color:var(--text-light);
+    }
+
+    .dashboard-actions{
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .dashboard-btn{
+      padding:.9rem 1.4rem;
+      border-radius:16px;
+      text-decoration:none;
+      font-weight:600;
+      transition:.25s;
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+    }
+
+    .btn-primary-admin{
+      background:linear-gradient(135deg,#ff4d6d,#ff8fa3);
+      color:white;
+      box-shadow:0 10px 20px rgba(255,77,109,.18);
+    }
+
+    .btn-primary-admin:hover{
+      transform:translateY(-3px);
+    }
+
+    .btn-outline-admin{
+      background:white;
+      color:var(--primary);
+      border:2px solid #ffd1da;
+    }
+
+    .btn-outline-admin:hover{
+      background:#fff0f3;
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1.2rem;
+      margin-bottom:2rem;
+    }
+
+    .stat-card{
+      background:white;
+      border-radius:24px;
+      padding:1.6rem;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+      border:1px solid #ffe2e8;
+      transition:.25s;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-4px);
+    }
+
+    .stat-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:1rem;
+    }
+
+    .stat-icon{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      background:#fff0f3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+    }
+
+    .stat-title{
+      color:var(--text-light);
+      font-size:.9rem;
+      margin-bottom:.4rem;
+    }
+
+    .stat-number{
+      font-size:2rem;
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .orders-card{
+      background:white;
+      border-radius:28px;
+      padding:2rem;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+      border:1px solid #ffe2e8;
+    }
+
+    .orders-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:1.5rem;
+      flex-wrap:wrap;
+      gap:1rem;
+    }
+
+    .orders-header h2{
+      font-size:1.5rem;
+      color:var(--text);
+    }
+
+    .orders-grid{
+      display:grid;
+      gap:1rem;
+    }
+
+    .order-item{
+      border:1px solid #ffe3e9;
+      border-radius:20px;
+      padding:1.2rem;
+      background:#fffafb;
+      transition:.25s;
+    }
+
+    .order-item:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 18px rgba(0,0,0,.04);
+    }
+
+    .order-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+      margin-bottom:.8rem;
+    }
+
+    .order-name{
+      font-size:1.05rem;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .status-badge{
+      padding:.45rem .9rem;
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:700;
+      text-transform:capitalize;
+    }
+
+    .pending{
+      background:#fff4d6;
+      color:#a06b00;
+    }
+
+    .diproses{
+      background:#dff4ff;
+      color:#0066a1;
+    }
+
+    .selesai{
+      background:#e3ffe8;
+      color:#16803c;
+    }
+
+    .order-info{
+      color:var(--text-light);
+      line-height:1.7;
+      font-size:.93rem;
+    }
+
+    @media(max-width:768px){
+
+      .dashboard-wrapper{
+        padding:1.2rem;
+      }
+
+      .dashboard-title h1{
+        font-size:1.8rem;
+      }
+
+      .dashboard-actions{
+        width:100%;
+      }
+
+      .dashboard-btn{
+        width:100%;
+        justify-content:center;
+      }
+
+    }
+  </style>
 </head>
+
 <body>
-  <div class="container" style="padding:2rem;">
-    <h1>📊 Dashboard Admin</h1>
 
-    <div class="grid grid-4" id="statsBox" style="margin-top:2rem;"></div>
+  <div class="dashboard-wrapper">
 
-    <div class="card" style="margin-top:2rem;">
-      <h2>🧾 Order Terbaru</h2>
-      <div id="recentOrders"></div>
+    <!-- TOP -->
+    <div class="dashboard-top">
+
+      <div class="dashboard-title">
+        <h1>📊 Dashboard Admin</h1>
+        <p>Kelola Nomona Cookies dengan mudah ✨</p>
+      </div>
+
+      <div class="dashboard-actions">
+
+        <a href="index.html" class="dashboard-btn btn-outline-admin">
+          🏠 Beranda
+        </a>
+
+        <a href="shop.html" class="dashboard-btn btn-outline-admin">
+          🛍️ Lihat Katalog
+        </a>
+
+      </div>
+
     </div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsBox">
+
+      <!-- load js -->
+
+    </div>
+
+    <!-- ORDERS -->
+    <div class="orders-card">
+
+      <div class="orders-header">
+        <h2>🧾 Order Terbaru</h2>
+      </div>
+
+      <div class="orders-grid" id="recentOrders">
+
+      </div>
+
+    </div>
+
   </div>
 
 <script>
+
 fetch('/admin/stats')
 .then(res => res.json())
 .then(data => {
+
   document.getElementById('statsBox').innerHTML = `
-    <div class="card">
-      <h3>Total Produk</h3>
-      <p>${data.totalProducts}</p>
+
+    <div class="stat-card">
+
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Total Produk</div>
+          <div class="stat-number">
+            ${data.totalProducts}
+          </div>
+        </div>
+
+        <div class="stat-icon">
+          🍪
+        </div>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>Total Order</h3>
-      <p>${data.totalOrders}</p>
+    <div class="stat-card">
+
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Total Order</div>
+          <div class="stat-number">
+            ${data.totalOrders}
+          </div>
+        </div>
+
+        <div class="stat-icon">
+          📦
+        </div>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>Pending</h3>
-      <p>${data.pendingOrders}</p>
+    <div class="stat-card">
+
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Pending</div>
+          <div class="stat-number">
+            ${data.pendingOrders}
+          </div>
+        </div>
+
+        <div class="stat-icon">
+          ⏳
+        </div>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>Pendapatan</h3>
-      <p>Rp ${data.totalRevenue.toLocaleString()}</p>
+    <div class="stat-card">
+
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Pendapatan</div>
+          <div class="stat-number">
+            Rp ${data.totalRevenue.toLocaleString()}
+          </div>
+        </div>
+
+        <div class="stat-icon">
+          💰
+        </div>
+      </div>
+
+    </div>
+
+  `;
+
+  document.getElementById('recentOrders').innerHTML =
+  data.recentOrders.map(o => `
+
+    <div class="order-item">
+
+      <div class="order-top">
+
+        <div class="order-name">
+          👤 ${o.customer_name}
+        </div>
+
+        <div class="status-badge ${o.status}">
+          ${o.status}
+        </div>
+
+      </div>
+
+      <div class="order-info">
+
+        💵 Total:
+        <strong>
+          Rp ${o.total.toLocaleString()}
+        </strong>
+
+        <br>
+
+        🕒 Order ID:
+        #${o.id}
+
+      </div>
+
+    </div>
+
+  `).join('');
+
+})
+.catch(() => {
+
+  document.getElementById('statsBox').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-title">
+        Gagal memuat statistik
+      </div>
     </div>
   `;
 
-  document.getElementById('recentOrders').innerHTML = data.recentOrders.map(o => `
-    <div class="product-card" style="margin-top:1rem;">
-      <h3>${o.customer_name}</h3>
-      <p>Total: Rp ${o.total.toLocaleString()}</p>
-      <p>Status: ${o.status}</p>
-    </div>
-  `).join('');
-})
+});
+
 </script>
+
 </body>
 </html>

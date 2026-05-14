@@ -70,12 +70,12 @@ if (!adminExists) {
 const productCount = db.prepare('SELECT COUNT(*) as c FROM products').get().c;
 if (productCount === 0) {
   const products = [
-    { name: 'Nastar Classic', price: 85000, image: 'nastar.jpeg', description: 'Nastar lembut isi selai nanas asli pilihan, dibuat dengan tepung premium dan mentega segar. Tekstur lumer di mulut dengan rasa manis segar nanas yang sempurna.', category: 'Classic', stock: 50 },
-    { name: 'Palm Sugar Cookies', price: 75000, image: 'palm.jpeg', description: 'Cookies unik dengan gula aren asli pilihan, memberikan aroma karamel alami yang khas. Renyah di luar, lembut di dalam dengan cita rasa tradisional premium.', category: 'Special', stock: 40 },
-    { name: 'Choco Crinkle', price: 90000, image: 'choco.jpeg', description: 'Cookies coklat premium dengan tekstur crispy di luar dan fudgy di dalam. Menggunakan dark chocolate Belgian berkualitas tinggi untuk rasa coklat yang intens.', category: 'Chocolate', stock: 35 },
-    { name: 'Sago Cheese', price: 80000, image: 'sago.jpeg', description: 'Cookies sagu dengan taburan keju cheddar premium, renyah dan gurih dengan aroma keju yang menggoda. Perpaduan sempurna antara tekstur sagu dan keju.', category: 'Cheese', stock: 45 },
-    { name: 'Putri Salju', price: 78000, image: 'salju.jpeg', description: 'Cookies klasik berlumur gula halus seperti salju, dengan isian kacang mete pilihan yang renyah. Lembut, manis, dan elegan untuk semua momen spesial.', category: 'Classic', stock: 60 },
-    { name: 'Pandan Snowball', price: 95000, image: 'pandan.jpeg', description: 'Pandan Snowball dengan aroma pandan alami yang wangi dan khas, dibalut taburan gula halus lembut. Teksturnya lumer di mulut dengan rasa manis yang pas, cocok untuk teman santai atau hampers spesial.', category: 'Special', stock: 30 },
+    { name: 'Nastar Classic', price: 35000, image: 'nastar.jpeg', description: 'Nastar lembut isi selai nanas asli pilihan, dibuat dengan tepung premium dan mentega segar. Tekstur lumer di mulut dengan rasa manis segar nanas yang sempurna.', category: 'Classic', stock: 50 },
+    { name: 'Palm Sugar Cookies', price: 30000, image: 'palm.jpeg', description: 'Cookies unik dengan gula aren asli pilihan, memberikan aroma karamel alami yang khas. Renyah di luar, lembut di dalam dengan cita rasa tradisional premium.', category: 'Special', stock: 40 },
+    { name: 'Choco Crinkle', price: 30000, image: 'choco.jpeg', description: 'Cookies coklat premium dengan tekstur crispy di luar dan fudgy di dalam. Menggunakan dark chocolate Belgian berkualitas tinggi untuk rasa coklat yang intens.', category: 'Chocolate', stock: 35 },
+    { name: 'Sago Cheese', price: 30000, image: 'sago.jpeg', description: 'Cookies sagu dengan taburan keju cheddar premium, renyah dan gurih dengan aroma keju yang menggoda. Perpaduan sempurna antara tekstur sagu dan keju.', category: 'Cheese', stock: 45 },
+    { name: 'Putri Salju', price: 30000, image: 'salju.jpeg', description: 'Cookies klasik berlumur gula halus seperti salju, dengan isian kacang mete pilihan yang renyah. Lembut, manis, dan elegan untuk semua momen spesial.', category: 'Classic', stock: 60 },
+    { name: 'Pandan Snowball', price: 30000, image: 'pandan.jpeg', description: 'Pandan Snowball dengan aroma pandan alami yang wangi dan khas, dibalut taburan gula halus lembut. Teksturnya lumer di mulut dengan rasa manis yang pas, cocok untuk teman santai atau hampers spesial.', category: 'Special', stock: 30 },
   ];
   const insert = db.prepare('INSERT INTO products (name, price, image, description, category, stock) VALUES (?, ?, ?, ?, ?, ?)');
   products.forEach(p => insert.run(p.name, p.price, p.image, p.description, p.category, p.stock));
