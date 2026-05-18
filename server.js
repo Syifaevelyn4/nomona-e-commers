@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const Database = require('better-sqlite3');
+const db = new Database('database.db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
